@@ -25,7 +25,6 @@ set scrolloff=10
 set expandtab
 set syn=auto
 "let loaded_matchparen = 1
-set shell=fish
 set backupskip=/tmp/*,/private/tmp/*
 let g:defx_icons_column_length = 2
 
@@ -65,6 +64,10 @@ autocmd InsertLeave * set nopaste
 
 " Add asterisks in block comments
 set formatoptions+=r
+set clipboard+=unnamedplus
+
+" Config php binary location
+let g:phpactorPhpBin = "/usr/bin/php"
 
 "}}}
 
@@ -97,19 +100,27 @@ endif
 au BufNewFile,BufRead *.es6 setf javascript
 " TypeScript
 au BufNewFile,BufRead *.tsx setf typescriptreact
+" Vue
+au BufNewFile,BufRead *.vue setf vue
 " Markdown
 au BufNewFile,BufRead *.md set filetype=markdown
 au BufNewFile,BufRead *.mdx set filetype=markdown
 " Flow
 au BufNewFile,BufRead *.flow set filetype=javascript
-" Fish
-au BufNewFile,BufRead *.fish set filetype=fish
+" php
+au BufNewFile,BufRead *.php setf php
 
 set suffixesadd=.js,.es,.jsx,.json,.css,.less,.sass,.styl,.php,.py,.md
 
 autocmd FileType coffee setlocal shiftwidth=2 tabstop=2
 autocmd FileType ruby setlocal shiftwidth=2 tabstop=2
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
+
+" Ruby
+let g:ruby_host_prog = '/var/lib/gems/3.0.0/gems/neovim-0.10.0/exe/neovim-ruby-host'
+
+" Disabled
+let g:loaded_perl_provider = 0
 
 "}}}
 
@@ -132,8 +143,6 @@ runtime ./maps.vim
 
 " Syntax theme "{{{
 " ---------------------------------------------------------------------
-
-" true color
 if exists("&termguicolors") && exists("&winblend")
   syntax enable
   set termguicolors
@@ -143,12 +152,13 @@ if exists("&termguicolors") && exists("&winblend")
   set background=dark
   " Use NeoSolarized
   let g:neosolarized_termtrans=1
-  runtime ./colors/NeoSolarized.vim
-  runtime ./colors/AtomDark.vim
-  colorscheme NeoSolarized
+  " runtime ./colors/NeoSolarized.vim
+  " runtime ./colors/AtomDark.vim
+  " colorscheme NeoSolarized
   " colorscheme AtomDark
+  let g:material_theme_style = 'ocean-community'
+  colorscheme material
 endif
-
 "}}}
 
 " Extras "{{{
@@ -183,5 +193,5 @@ function! s:browse_check(path) abort
 
   execute 'Defx' a:path
 endfunction
-"}}}
 " vim: set foldmethod=marker foldlevel=0:
+"}}}

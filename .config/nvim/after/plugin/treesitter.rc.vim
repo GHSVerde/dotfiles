@@ -6,7 +6,7 @@ endif
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   highlight = {
-    enable = true,
+    enable = false,
     disable = {},
   },
   indent = {
@@ -16,7 +16,6 @@ require'nvim-treesitter.configs'.setup {
   ensure_installed = {
     "tsx",
     "toml",
-    "fish",
     "php",
     "json",
     "yaml",

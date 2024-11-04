@@ -9,6 +9,7 @@ EOF
 lua << EOF
 local nvim_lsp = require('lspconfig')
 local protocol = require'vim.lsp.protocol'
+local coverage = require('coverage')
 
 -- Use an on_attach function to only map the following keys 
 -- after the language server attaches to the current buffer
@@ -44,7 +45,13 @@ local on_attach = function(client, bufnr)
   -- formatting
   if client.name == 'tsserver' then
     client.resolved_capabilities.document_formatting = false
+    coverage.load(bufnr)
   end
+
+  if client.name == 'vuels' then
+    coverage.load(bufnr)
+  end
+
 
   if client.resolved_capabilities.document_formatting then
     vim.api.nvim_command [[augroup Format]]
@@ -83,48 +90,51 @@ local on_attach = function(client, bufnr)
   }
 end
 
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Set up completion using nvim_cmp with LSP source
-require'lspconfig'.vuels.setup{
-{
-  config = {
-    css = {},
-    emmet = {},
-    html = {
-      suggest = {}
-    },
-    javascript = {
-      format = {}
-    },
-    filetypes = { 'vue'},
-    vetur = {
-      completion = {
-        autoImport = false,
-        tagCasing = "kebab",
-        useScaffoldSnippets = false
+nvim_lsp.vuels.setup{
+  on_attach = on_attach,
+  init_options = {
+    filetypes = {'vue'},
+    config = {
+      css = {},
+      emmet = {},
+      html = {
+        suggest = {}
       },
-      format = {
-        defaultFormatter = {
-          js = "eslint",
-          ts = "eslint"
+      javascript = {
+        format = {}
+      },
+      stylusSupremacy = {},
+      typescript = {
+        format = {}
+      },
+      vetur = {
+        completion = {
+          autoImport = false,
+          tagCasing = "kebab",
+          useScaffoldSnippets = false
         },
-        defaultFormatterOptions = {},
-        scriptInitialIndent = false,
-        styleInitialIndent = false
-      },
-      useWorkspaceDependencies = false,
-      validation = {
-        script = true,
-        style = true,
-        template = true
+        format = {
+          defaultFormatter = {
+            js = "prettier",
+            ts = "prettier"
+          },
+          defaultFormatterOptions = {},
+          scriptInitialIndent = false,
+          styleInitialIndent = false
+        },
+        useWorkspaceDependencies = false,
+        validation = {
+          script = true,
+          style = true,
+          template = true
+        }
       }
     }
   }
 }
-}
-local capabilities = require('cmp_nvim_lsp').update_capabilities(
-  vim.lsp.protocol.make_client_capabilities()
-)
 
 nvim_lsp.flow.setup {
   on_attach = on_attach,
@@ -139,6 +149,11 @@ nvim_lsp.tsserver.setup {
 
 nvim_lsp.cssmodules_ls.setup {
   on_attach = on_attach
+}
+
+nvim_lsp.phpactor.setup {
+  on_attach = on_attach,
+  filetypes = { 'php' }
 }
 
 nvim_lsp.diagnosticls.setup {
@@ -168,18 +183,17 @@ nvim_lsp.diagnosticls.setup {
       },
     },
     filetypes = {
-      javascript = 'eslint',
-      javascriptreact = 'eslint',
-      typescript = 'eslint',
-      typescriptreact = 'eslint',
-      vue = 'eslint'
+      javascript = 'prettier-eslint',
+      javascriptreact = 'prettier-eslint',
+      typescript = 'prettier-eslint',
+      typescriptreact = 'prettier-eslint',
+      vue = 'prettier-eslint'
     },
     formatters = {
       eslint_d = {
         command = 'eslint_d',
         rootPatterns = { '.git' },
-        args = { '--stdin', '--stdin-filename', '%filename', '--fix-to-stdout' },
-        rootPatterns = { '.git' },
+        args = { '--stdin', '--stdin-filename', '%filename', '--fix-to-stdout' }
       },
       prettier = {
         command = 'prettier_d_slim',
@@ -198,7 +212,7 @@ nvim_lsp.diagnosticls.setup {
       typescript = 'prettier',
       typescriptreact = 'prettier',
       json = 'prettier',
-      vue = 'prettier'
+      vue = 'prettier-eslint'
     }
   }
 }

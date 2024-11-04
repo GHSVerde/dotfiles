@@ -29,6 +29,11 @@ if has("nvim")
   Plug 'windwp/nvim-autopairs'
   Plug 'windwp/nvim-ts-autotag'
   Plug 'kdheepak/tabline.nvim'
+  Plug 'phpactor/phpactor', {'for': 'php', 'tag': '*', 'do': 'composer install --no-dev -o'}
+  Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+  Plug 'andweeb/presence.nvim'
+  Plug 'andythigpen/nvim-coverage'
+  Plug 'f-person/git-blame.nvim'
 endif
 
 Plug 'groenewege/vim-less', { 'for': 'less' }
